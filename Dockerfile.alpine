@@ -1,0 +1,25 @@
+ARG WORDPRESS_VERSION=5.0.0-php7.2-apache
+FROM wordpress:${WORDPRESS_VERSION}
+
+ARG NEW_RELIC_AGENT_URL='https://download.newrelic.com/php_agent/release/newrelic-php5-8.5.0.235-linux-musl.tar.gz'
+ENV NEWRELIC_LICENSE='your-key'
+ENV NEWRELIC_APPNAME='your-app'
+
+RUN apk add --no-cache bash bash-completion curl python pip less && \
+    pip install crudini
+
+ADD entrypoint.sh /usr/local/bin/
+
+RUN chmod a+x /usr/local/bin/entrypoint.sh && \
+    curl -sS -L ${NEW_RELIC_AGENT_URL} | tar -C /tmp -zx && \
+    export NR_INSTALL_USE_CP_NOT_LN=1 && \
+    export NR_INSTALL_SILENT=1 && \
+    /tmp/newrelic-php5-*/newrelic-install install && \
+    rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* && \
+    mv /usr/local/etc/php/conf.d/newrelic.ini /usr/local/etc/php/conf.d/newrelic.ini.template
+
+RUN curl -ss -o /usr/local/bin/wp-cli -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod a+x /usr/local/bin/wp-cli
+
+ENTRYPOINT ["/bin/bash", "/usr/local/bin/entrypoint.sh"]
+CMD ["apache2-foreground"]

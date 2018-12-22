@@ -1,0 +1,14 @@
+sudo: required
+
+env:
+  - IMAGE_NAME="webofmars/wordpress"
+
+services:
+  - docker
+
+before_script:
+  - sudo apt-get install -y jq
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
+script:
+  - bash generator.sh
