@@ -35,7 +35,8 @@ for VERSION in $(grep -E '^.*-alpine$' tags.list | sort -rn | head -2); do
   docker push $IMAGE_NAME:$VERSION
 done
 
-cli-*: alpine based
+# cli-*: alpine based
+# ex: cli-php7.2
 for VERSION in $(grep -E '^cli$|^cli-.*$' tags.list | sort -rn | head -2); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.alpine --build-arg WORDPRESS_VERSION=$VERSION .
