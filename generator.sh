@@ -13,7 +13,7 @@ wget -q https://registry.hub.docker.com/v1/repositories/wordpress/tags -O - | jq
 
 # apache = debian based
 # ex: 5.0.0-php7.2-apache
-for VERSION in $(grep -E '^apache$|^.*-apache$' tags.list | sort -rn | head -2); do
+for VERSION in $(grep -E '^apache$|^.*-apache$' tags.list | sort -rn); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.debian --build-arg WORDPRESS_VERSION=$VERSION .
   docker push $IMAGE_NAME:$VERSION
@@ -21,7 +21,7 @@ done
 
 # fpm : debian based
 # ex: 4-php7.2-fpm
-for VERSION in $(grep -E '^fpm$|^.*-fpm$' tags.list | sort -rn | head -2); do
+for VERSION in $(grep -E '^fpm$|^.*-fpm$' tags.list | sort -rn); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.debian --build-arg WORDPRESS_VERSION=$VERSION .
   docker push $IMAGE_NAME:$VERSION
@@ -29,7 +29,7 @@ done
 
 # fpm-alpine: alpine based
 # ex: 5.0-php7.2-fpm-alpine
-for VERSION in $(grep -E '^.*-alpine$' tags.list | sort -rn | head -2); do
+for VERSION in $(grep -E '^.*-alpine$' tags.list | sort -rn); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.alpine --build-arg WORDPRESS_VERSION=$VERSION .
   docker push $IMAGE_NAME:$VERSION
@@ -37,7 +37,7 @@ done
 
 # cli-*: alpine based
 # ex: cli-php7.2
-for VERSION in $(grep -E '^cli$|^cli-.*$' tags.list | sort -rn | head -2); do
+for VERSION in $(grep -E '^cli$|^cli-.*$' tags.list | sort -rn); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.alpine --build-arg WORDPRESS_VERSION=$VERSION .
   CONTAINER_ID=$(docker run -d $IMAGE_NAME:$VERSION /bin/true)
@@ -47,7 +47,7 @@ done
 
 # php-*: debian based (apache)
 # ex: php7.2
-for VERSION in $(grep -E '^php-[\d\.]+$' tags.list | sort -rn | head -2); do
+for VERSION in $(grep -E '^php-[\d\.]+$' tags.list | sort -rn); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.debian --build-arg WORDPRESS_VERSION=$VERSION .
   docker push $IMAGE_NAME:$VERSION
