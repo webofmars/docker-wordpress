@@ -6,7 +6,7 @@ ENV NEWRELIC_LICENSE='your-key'
 ENV NEWRELIC_APPNAME='your-app'
 USER 0
 
-RUN apk add --no-cache bash bash-completion curl python py2-pip less && \
+RUN apk add --no-cache bash bash-completion curl python py2-pip less mailx && \
     pip install crudini
 
 ADD entrypoint.sh /usr/local/bin/
