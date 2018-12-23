@@ -47,7 +47,7 @@ done
 
 # php-*: debian based (apache)
 # ex: php7.2
-for VERSION in $(grep -E '^php-[\d\.]+$' tags.list | sort -rn); do
+for VERSION in $(grep -E '^php\d+[[:digit:].-]*$' tags.list | sort -rn); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.debian --build-arg WORDPRESS_VERSION=$VERSION .
   docker push $IMAGE_NAME:$VERSION
