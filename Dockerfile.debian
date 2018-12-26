@@ -26,7 +26,7 @@ RUN chmod a+x /usr/local/bin/entrypoint.sh && \
 RUN curl -ss -o /usr/local/bin/wp-cli -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod a+x /usr/local/bin/wp-cli
 
-RUN if [ -f /etc/apache2/mods-enabled/status.conf ]; then
+RUN if [ -f /etc/apache2/mods-enabled/status.conf ]; then \
         sed -i -e '/Require local/ a \                Require ip 192.168.0.0/16' /etc/apache2/mods-enabled/status.conf; \
         sed -i -e '/Require local/ a \                Require ip 172.16.0.0/12'  /etc/apache2/mods-enabled/status.conf; \
         sed -i -e '/Require local/ a \                Require ip 192.168.0.0/16' /etc/apache2/mods-enabled/status.conf; \
