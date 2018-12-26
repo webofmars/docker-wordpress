@@ -1,11 +1,13 @@
 # webofmars/wordpress
 
-A base wordpress image with 2 additions :
+A base wordpress image with some small additions :
 
 * Newrelic agent that can be configured from environnement
 * wp-cli installed
+* mail binary included
+* Apache server-status open to all private subnets ranges
 
-## configure Newrelic app
+## configure NewRelic agent settings
 
 Each `NEWRELIC_XXX` environement variable will be converted to the `newrelic.xxx` corresponding setting that will be replaced in newrelic.ini.
 
