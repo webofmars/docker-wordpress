@@ -23,7 +23,7 @@ RUN chmod a+x /usr/local/bin/entrypoint.sh && \
     rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* && \
     mv /usr/local/etc/php/conf.d/newrelic.ini /usr/local/etc/php/conf.d/newrelic.ini.template
 
-RUN curl -ss -o /usr/local/bin/wp-cli -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+RUN curl -ss -o /usr/local/bin/wp-cli -O https://gitcdn.link/repo/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod a+x /usr/local/bin/wp-cli
 
 RUN if [ -f /etc/apache2/mods-enabled/status.conf ]; then \
