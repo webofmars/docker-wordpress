@@ -1,7 +1,7 @@
 ARG WORDPRESS_VERSION=5.0.0-php7.2-apache
 FROM wordpress:${WORDPRESS_VERSION}
 
-ARG NEW_RELIC_AGENT_URL='https://download.newrelic.com/php_agent/release/newrelic-php5-8.5.0.235-linux-musl.tar.gz'
+ARG NEW_RELIC_AGENT_URL='https://download.newrelic.com/php_agent/release/newrelic-php5-8.6.0.238-linux-musl.tar.gz'
 ENV NEWRELIC_LICENSE='your-key'
 ENV NEWRELIC_APPNAME='your-app'
 USER 0
