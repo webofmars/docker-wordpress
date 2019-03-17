@@ -2,8 +2,6 @@
 
 set -xe -o pipefail
 
-# TODO: the actual build will fail with alpine based image
-
 [ ! -z "${IMAGE_NAME}" ] || (echo "no image name provided"; exit 1)
 
 # get all curent tags
@@ -26,7 +24,7 @@ done
 # web server: apache 2.4 / mpm: prefork
 # php: mod_php
 # ex: 5.0.0-php7.2-apache
-for VERSION in $(grep -E '^apache$|^.*-apache$' tags.list | sort -rn); do
+for VERSION in $(grep -E '^apache$|^.*-apache$' tags.list | sort -rn | head -10); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.debian --build-arg WORDPRESS_VERSION=$VERSION .
   docker push $IMAGE_NAME:$VERSION
@@ -38,7 +36,7 @@ done
 # web server: apache 2.4 / mpm: prefork
 # php: mod_php
 # ex: php7.2
-for VERSION in $(grep -E '^php[[:digit:].-]+$' tags.list | sort -rn); do
+for VERSION in $(grep -E '^php[[:digit:].-]+$' tags.list | sort -rn | head -10); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.debian --build-arg WORDPRESS_VERSION=$VERSION .
   docker push $IMAGE_NAME:$VERSION
@@ -49,7 +47,7 @@ done
 # web server: none
 # php: php-fpm
 # ex: 4-php7.2-fpm
-for VERSION in $(grep -E '^fpm$|^.*-fpm$' tags.list | sort -rn); do
+for VERSION in $(grep -E '^fpm$|^.*-fpm$' tags.list | sort -rn | head -10); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.debian --build-arg WORDPRESS_VERSION=$VERSION .
   docker push $IMAGE_NAME:$VERSION
@@ -60,7 +58,7 @@ done
 # web server: none
 # php: php-fpm
 # ex: 5.0-php7.2-fpm-alpine
-for VERSION in $(grep -E '^.*-alpine$' tags.list | sort -rn); do
+for VERSION in $(grep -E '^.*-alpine$' tags.list | sort -rn | head -10); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.alpine --build-arg WORDPRESS_VERSION=$VERSION .
   docker push $IMAGE_NAME:$VERSION
@@ -71,7 +69,7 @@ done
 # web server: none
 # php: cli
 # ex: cli-php7.2
-for VERSION in $(grep -E '^cli$|^cli-.*$' tags.list | sort -rn); do
+for VERSION in $(grep -E '^cli$|^cli-.*$' tags.list | sort -rn | head -10); do
   echo "building $IMAGE_NAME:$VERSION"
   [ ! -z "${VERSION}" ] && docker build --pull -t $IMAGE_NAME:$VERSION -f Dockerfile.alpine --build-arg WORDPRESS_VERSION=$VERSION .
   CONTAINER_ID=$(docker run -d $IMAGE_NAME:$VERSION /bin/true)
