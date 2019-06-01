@@ -1,7 +1,7 @@
-ARG WORDPRESS_VERSION=5.0.0-php7.2-apache
+ARG WORDPRESS_VERSION=5.2.1-php7.3-fpm-alpine
 FROM wordpress:${WORDPRESS_VERSION}
 
-ARG NEW_RELIC_AGENT_URL='https://download.newrelic.com/php_agent/release/newrelic-php5-8.6.0.238-linux-musl.tar.gz'
+ARG NEW_RELIC_AGENT_URL='https://download.newrelic.com/php_agent/release/newrelic-php5-8.7.0.242-linux-musl.tar.gz'
 ENV NEWRELIC_LICENSE='your-key'
 ENV NEWRELIC_APPNAME='your-app'
 USER 0
@@ -21,6 +21,12 @@ RUN chmod a+x /usr/local/bin/entrypoint.sh && \
 
 RUN curl -ss -o /usr/local/bin/wp-cli -O https://gitcdn.link/repo/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod a+x /usr/local/bin/wp-cli
+
+RUN apk add --no-cache --virtual build-dependencies build-base && \
+    apk --no-cache add autoconf zlib-dev libmemcached-dev && \
+    pecl install memcached && \
+    docker-php-ext-enable memcached && \
+    apk del zlib-dev libmemcached-dev build-dependencies build-base
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/entrypoint.sh"]
 CMD ["apache2-foreground"]

@@ -1,7 +1,7 @@
-ARG WORDPRESS_VERSION=5.0.0-php7.2-apache
+ARG WORDPRESS_VERSION=5.2.1-php7.3-apache
 FROM wordpress:${WORDPRESS_VERSION}
 
-ARG NEW_RELIC_AGENT_URL='https://download.newrelic.com/php_agent/release/newrelic-php5-8.6.0.238-linux.tar.gz'
+ARG NEW_RELIC_AGENT_URL='https://download.newrelic.com/php_agent/release/newrelic-php5-8.7.0.242-linux.tar.gz'
 ENV NEWRELIC_LICENSE='your-key'
 ENV NEWRELIC_APPNAME='your-app'
 USER 0
@@ -32,6 +32,16 @@ RUN if [ -f /etc/apache2/mods-enabled/status.conf ]; then \
         sed -i -e '/Require local/ a \                Require ip 192.168.0.0/16' /etc/apache2/mods-enabled/status.conf; \
         sed -i -e '/Require local/ a \                Require ip 10.0.0.0/8'     /etc/apache2/mods-enabled/status.conf; \
     fi
+
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update -y && \
+    apt-get install -y zlib1g-dev libmemcached-dev && \
+    pecl install memcached && \
+    docker-php-ext-enable memcached && \
+    apt-get remove -y --purge zlib1g-dev libmemcached-dev && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/entrypoint.sh"]
 CMD ["apache2-foreground"]
