@@ -8,7 +8,7 @@ USER 0
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update -y && \
-    apt-get install -y bash bash-completion curl python python-pip less mailutils libmemcached && \
+    apt-get install -y bash bash-completion curl python python-pip less mailutils && \
     pip install crudini && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -33,12 +33,13 @@ RUN if [ -f /etc/apache2/mods-enabled/status.conf ]; then \
         sed -i -e '/Require local/ a \                Require ip 10.0.0.0/8'     /etc/apache2/mods-enabled/status.conf; \
     fi
 
+# Add support for memcached
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update -y && \
     apt-get install -y zlib1g-dev libmemcached-dev && \
     pecl install memcached && \
     docker-php-ext-enable memcached && \
-    apt-get remove -y --purge zlib1g-dev libmemcached-dev && \
+    apt-get remove -y --purge zlib1g-dev && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

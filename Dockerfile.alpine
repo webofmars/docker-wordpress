@@ -6,7 +6,7 @@ ENV NEWRELIC_LICENSE='your-key'
 ENV NEWRELIC_APPNAME='your-app'
 USER 0
 
-RUN apk add --no-cache bash bash-completion curl python py-pip less mailx libmemcached && \
+RUN apk add --no-cache bash bash-completion curl python py-pip less mailx && \
     pip install crudini
 
 ADD entrypoint.sh /usr/local/bin/
@@ -22,11 +22,12 @@ RUN chmod a+x /usr/local/bin/entrypoint.sh && \
 RUN curl -ss -o /usr/local/bin/wp-cli -O https://gitcdn.link/repo/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod a+x /usr/local/bin/wp-cli
 
+# Adds support for memcached
 RUN apk add --no-cache --virtual build-dependencies build-base && \
     apk --no-cache add autoconf zlib-dev libmemcached-dev && \
     pecl install memcached && \
     docker-php-ext-enable memcached && \
-    apk del zlib-dev libmemcached-dev build-dependencies build-base
+    apk del zlib-dev build-dependencies build-base
 
 ENTRYPOINT ["/bin/bash", "/usr/local/bin/entrypoint.sh"]
 CMD ["apache2-foreground"]
