@@ -35,8 +35,11 @@ RUN if [ -f /etc/apache2/mods-enabled/status.conf ]; then \
 
 # Add support for memcached
 RUN export DEBIAN_FRONTEND=noninteractive && \
-    (php --version | grep -q -e '^PHP 5.6') && export MEMCACHED_VERSION="memcached-2.2.0" \
-    (php --version | grep -q -e '^PHP 7') && export MEMCACHED_VERSION="memcached-3.1.3" \
+    case $(echo $PHP_VERSION | cut -d '.' -f 1,2) in \
+        5.6) export MEMCACHED_VERSION="memcached-2.2.0";; \
+        7.*) export MEMCACHED_VERSION="memcached-3.1.3";; \
+        *) echo "Unsuported PHP version: $PHP_VERSION"; exit 1;; \
+    esac && \
     apt-get update -y && \
     apt-get install -y zlib1g-dev libmemcached-dev && \
     pecl install $MEMCACHED_VERSION && \
